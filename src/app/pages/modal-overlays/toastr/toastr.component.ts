@@ -1,11 +1,19 @@
+/*
+ * Copyright (c) Akveo 2019. All Rights Reserved.
+ * Licensed under the Single Application / Multi Application License.
+ * See LICENSE_SINGLE_APP / LICENSE_MULTI_APP in the 'docs' folder for license information on type of purchased license.
+ */
+
 import { Component } from '@angular/core';
+import { ToasterConfig } from 'angular2-toaster';
+
+import 'style-loader!angular2-toaster/toaster.css';
 import {
   NbComponentStatus,
   NbGlobalLogicalPosition,
   NbGlobalPhysicalPosition,
   NbGlobalPosition,
   NbToastrService,
-  NbToastrConfig,
 } from '@nebular/theme';
 
 @Component({
@@ -16,7 +24,7 @@ import {
 export class ToastrComponent {
   constructor(private toastrService: NbToastrService) {}
 
-  config: NbToastrConfig;
+  config: ToasterConfig;
 
   index = 1;
   destroyByClick = true;
@@ -67,13 +75,14 @@ export class ToastrComponent {
   }
 
   private showToast(type: NbComponentStatus, title: string, body: string) {
+    const hasIcon = this.hasIcon ? {  } : { icon: '' };
     const config = {
       status: type,
       destroyByClick: this.destroyByClick,
       duration: this.duration,
-      hasIcon: this.hasIcon,
       position: this.position,
       preventDuplicates: this.preventDuplicates,
+      ...hasIcon,
     };
     const titleContent = title ? `. ${title}` : '';
 

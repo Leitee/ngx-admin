@@ -1,6 +1,13 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    //"strict": true, TODO: apply if possible once unnecesary files are removed
+    "baseUrl": "src",// ./    
+    "paths": {
+      "@/*": [
+        "app/*"
+      ]
+    },
     "importHelpers": true,
     "module": "es2020",
     "outDir": "./dist/out-tsc",

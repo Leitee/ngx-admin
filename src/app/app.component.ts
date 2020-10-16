@@ -1,23 +1,41 @@
-/**
- * @license
- * Copyright Akveo. All Rights Reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
+/*
+ * Copyright (c) Akveo 2019. All Rights Reserved.
+ * Licensed under the Single Application / Multi Application License.
+ * See LICENSE_SINGLE_APP / LICENSE_MULTI_APP in the 'docs' folder for license information on type of purchased license.
  */
-import { Component, OnInit } from '@angular/core';
-import { AnalyticsService } from './@core/utils/analytics.service';
-import { SeoService } from './@core/utils/seo.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AnalyticsService } from './@core/utils';
+import { InitUserService } from './@theme/services/init-user.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'ngx-app',
   template: '<router-outlet></router-outlet>',
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
 
-  constructor(private analytics: AnalyticsService, private seoService: SeoService) {
+  private destroy$: Subject<void> = new Subject<void>();
+
+  constructor(private analytics: AnalyticsService,
+              private initUserService: InitUserService) {
+              this.initUser();
   }
 
   ngOnInit(): void {
     this.analytics.trackPageViews();
-    this.seoService.trackCanonicalChanges();
+  }
+
+  initUser() {
+    this.initUserService.initCurrentUser()
+      .pipe(
+        takeUntil(this.destroy$),
+      )
+      .subscribe();
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
